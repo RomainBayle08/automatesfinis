@@ -8,37 +8,67 @@ Read an automaton and a word, returns:
 
 from automaton import Automaton, EPSILON, error, warn
 import sys
-import pdb # for debugging
+import pdb
+
 
 ##################
 
-def is_deterministic(a:'Automaton')->bool:
-  #TODO implement!
-  return False
-  
-##################
-  
-def recognizes(a:'Automaton', word:str)->bool:
-  #TODO implement!
-  return False
+def is_deterministic(a: 'Automaton') -> bool:
+    transitions = a.transitions
+    length = len(transitions)
+    n = 0
+    test = 0
+    while n > length-1:
+        currentTransition = transitions[n]
+        nextTransition = transitions[n+1]
+        currentSymbole = currentTransition[1]
+        nextSymbole = nextTransition[1]
+        currentState = currentTransition[0]
+        nextState = nextTransition[0]
+        if currentState == nextState & currentSymbole == nextSymbole: #si pour le meme etat de depart on a 2 fois le meme symbole il est non deterministe
+            test = test + 1
+        if currentSymbole == "%" | nextSymbole == "%":#si un symbole de transition est epsilon il est non deterministe
+            test = test + 1
+        n = n + 1
+    if test != 0:
+        return False
+
+
+
+
 
 ##################
 
-if __name__ == "__main__" :
-  if len(sys.argv) != 3:
-    usagestring = "Usage: {} <automaton-file.af> <word-to-recognize>"
-    error(usagestring.format(sys.argv[0]))
+def recognizes(a: 'Automaton', word: str) -> bool:
+    wordLettres = list(word)
+    alphabet = a.alphabet
 
-  automatonfile = sys.argv[1]  
-  word = sys.argv[2]
+    length = len(wordLettres)
+    while length > 0:
+        if not alphabet.__contains__(wordLettres[length]):
+            return False
+            break
+        length = length - 1
 
-  a = Automaton("dummy")
-  a.from_txtfile(automatonfile)
+    return False
 
-  if not is_deterministic(a) :
-    print("ERROR")
-  elif recognizes(a, word):
-    print("YES")
-  else:
-    print("NO")
 
+##################
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        usagestring = "Usage: {} <automaton-file.af> <word-to-recognize>"
+        error(usagestring.format(sys.argv[0]))
+
+    automatonfile = sys.argv[1]
+    word = sys.argv[2]
+
+    a = Automaton("dummy")
+    a.from_txtfile(automatonfile)
+
+    if not is_deterministic(a):
+        print("ERROR")
+    elif recognizes(a, word):
+        print("YES")
+    else:
+        print("NO")
