@@ -30,7 +30,7 @@ def is_deterministic(a: 'Automaton') -> bool:
         if currentSymbole == "%" | nextSymbole == "%":#si un symbole de transition est epsilon il est non deterministe
             test = test + 1
         n = n + 1
-    if test != 0:
+    if test > 0:
         return False
 
 
