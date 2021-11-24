@@ -59,9 +59,17 @@ def recognizes(a: 'Automaton', word: str) -> bool:
         if transitions[n].__contains__(currentLetter):
             currentTransitions = transitions[n]
             n = currentTransitions[2]
-            pointer = pointer + 1
-            if finalstates.__contains__(n):
-                return True
+            test = n
+            while test > len(transitions):
+                currentTransitions2 = transitions[test]
+                if currentTransitions2[1].__contains__(n):
+                    n = n+test
+                else:
+                    test = test + 1
+
+        pointer = pointer + 1
+        if finalstates.__contains__(n):
+             return True
         else:
             n = n+1
         if n > len(transitions):
