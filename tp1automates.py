@@ -41,16 +41,32 @@ def is_deterministic(a: 'Automaton') -> bool:
 
 def recognizes(a: 'Automaton', word: str) -> bool:
     wordLettres = list(word)
+    wordLength = len(wordLettres)
     alphabet = a.alphabet
-
-    length = len(wordLettres)
-    while length > 0:
-        if not alphabet.__contains__(wordLettres[length]):
+    finalstates = a.acceptstates
+    states = a.states
+    lengthAlphabet = len(wordLettres)
+    while lengthAlphabet> 0:
+        if not alphabet.__contains__(wordLettres[lengthAlphabet]):
             return False
             break
-        length = length - 1
+        lengthAlphabet = lengthAlphabet - 1
+    transitions = a.transitions
+    n = 0
+    pointer = 0
+    while pointer < wordLength:
+        currentLetter = wordLettres[pointer]
+        if transitions[n].__contains__(currentLetter):
+            currentTransitions = transitions[n]
+            n = currentTransitions[2]
+            pointer = pointer + 1
+            if finalstates.__contains__(n):
+                return True
+        else:
+            n = n+1
+        if n > len(transitions):
+            return False
 
-    return False
 
 
 ##################
